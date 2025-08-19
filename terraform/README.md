@@ -1,51 +1,74 @@
-# 🚀 Automated Infrastructure Project (Terraform + Ansible + Nginx)
+# 🚀 Automated Infrastructure with Terraform
 
 ## 📌 Project Overview
-This project automates infrastructure deployment on **AWS** using **Terraform**, followed by **Ansible** configuration management and **Nginx** setup.
+This project provisions a complete AWS infrastructure using **Terraform**.  
+The setup follows a **modular structure** and supports multi-environment deployments.
 
-### Tech Stack
-- **Terraform** → Infrastructure as Code (VPC, Subnets, EC2, Security Groups, Load Balancer, Auto Scaling Group).
-- **Ansible** → Configuration management (installing packages, managing users, deploying apps).
-- **Nginx** → Web server setup with load balancing and reverse proxy.
+### 🔧 Components Deployed
+- **VPC Module**
+  - Custom VPC with DNS support
+  - Public subnets
+- **Auto Scaling Group (ASG) Module**
+  - EC2 launch template with user data
+  - Auto Scaling configuration
+  - Key pair for SSH access
+  - Integration with Application Load Balancer (ALB)
+- **Application Load Balancer (ALB) Module**
+  - Target group
+  - Listener
+  - Attachment to ASG
 
 ---
 
 ## 📂 Project Structure
+```
 project-automated-infra/
 │── terraform/
-│ ├── main.tf # Root Terraform file calling modules
-│ ├── variables.tf # Input variables
-│ ├── outputs.tf # Output values
-│ ├── providers.tf # AWS provider
-│ ├── modules/ # Reusable Terraform modules
-│ │ ├── vpc/
-│ │ ├── alb/
-│ │ └── asg/
-│ └── envs/
-│ └── dev/ # Environment-specific configs
-│── ansible/ # (will be added later)
-│── nginx/ # (will be added later)
-└── README.md
-
+    ├── main.tf 
+    ├── variables.tf  
+    ├── outputs.tf 
+    ├── providers.tf
+    ├── .gitignore
+    ├── .terraform.lock.hcl
+    ├── README.md
+    └── modules/ 
+        ├── vpc/
+        │   ├── main.tf 
+        │   ├── variables.tf  
+        │   └── outputs.tf  
+        ├── alb/
+        │   ├── main.tf 
+        │   ├── variables.tf  
+        │   └── outputs.tf 
+        └── asg/
+            ├── main.tf 
+            ├── variables.tf  
+            └── outputs.tf 
+      
+```
 
 ---
 
 ## ⚡ How to Use
 
 ### 1️⃣ Initialize Terraform
-```bash
+```
 cd terraform
 terraform init
-
+```
 2️⃣ Validate the Configuration
+```
 terraform validate
-
+```
 3️⃣ Preview the Infrastructure Changes
+```
 terraform plan
-
+```
 4️⃣ Apply the Infrastructure
+```
 terraform apply
-
+```
 5️⃣ Destroy Infrastructure (Cleanup)
+```
 terraform destroy
-
+```
