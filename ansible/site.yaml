@@ -1,0 +1,6 @@
+---
+- name: Configure Nginx on web servers
+  hosts: tag_Name__vm_lt_1
+  become: yes
+  roles:
+    - nginx

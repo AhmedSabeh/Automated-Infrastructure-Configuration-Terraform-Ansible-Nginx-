@@ -1,0 +1,24 @@
+- name: Enable Nginx in Amazon Linux Extras
+  ansible.builtin.shell: amazon-linux-extras enable nginx1
+  become: yes
+
+- name: Install Nginx on Amazon Linux 2
+  ansible.builtin.shell: amazon-linux-extras install -y nginx1
+  become: yes
+
+- name: Start & enable Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Deploy custom nginx.conf
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    mode: '0644'
+
+- name: Restart Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
