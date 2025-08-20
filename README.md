@@ -142,7 +142,7 @@ curl http://<alb-dns-name>
 
     *  This confirms traffic is distributed to your EC2 instances.
 
-Step 4 — Cleanup
+## Step 4 — Cleanup
 ```
 terraform destroy -auto-approve
 ```
