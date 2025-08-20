@@ -1,4 +1,3 @@
-# Get latest Amazon Linux 2 AMI
 data "aws_ami" "amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
@@ -11,13 +10,13 @@ data "aws_ami" "amazon_linux" {
 
 # Import your SSH public key
 resource "aws_key_pair" "my-key" {
-  key_name   = "${var.project}-key"
+  key_name   = "my-key"
   public_key = file(var.public_key_path)
 }
 
 # Security group for EC2
 resource "aws_security_group" "asg_sg" {
-  name        = "${var.project}-asg-sg"
+  name        = "asg-sg"
   description = "ASG security group"
   vpc_id      = var.vpc_id
 
@@ -25,7 +24,7 @@ resource "aws_security_group" "asg_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # limit in real projects
+    cidr_blocks = ["0.0.0.0/0"] 
   }
 
   ingress {
@@ -41,13 +40,11 @@ resource "aws_security_group" "asg_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = { Name = "${var.project}-asg-sg", Project = var.project }
 }
 
 # Launch template
 resource "aws_launch_template" "template-1" {
-  name_prefix   = "${var.project}-lt-"
+  name_prefix   = "lt-1"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = var.instance_type
   key_name      = aws_key_pair.my-key.key_name
@@ -56,18 +53,17 @@ resource "aws_launch_template" "template-1" {
   tag_specifications {
     resource_type = "instance"
     tags = {
-      Name    = "${var.project}-web"
-      Project = var.project
+      Name    = "vm-lt-1"
     }
   }
 }
 
 # Auto Scaling Group
 resource "aws_autoscaling_group" "asg-1" {
-  name                      = "${var.project}-asg"
+  name                      = "asg"
   min_size                  = 1
   max_size                  = 2
-  desired_capacity          = 2
+  desired_capacity          = 3
   vpc_zone_identifier       = var.subnet_ids
   health_check_type         = "EC2"
   health_check_grace_period = 60
@@ -78,12 +74,6 @@ resource "aws_autoscaling_group" "asg-1" {
   }
 
   target_group_arns = [var.target_group_arn]
-
-  tag {
-    key                 = "Name"
-    value               = "${var.project}-asg"
-    propagate_at_launch = true
-  }
 }
 
 
@@ -91,4 +81,3 @@ resource "aws_autoscaling_attachment" "alb" {
   autoscaling_group_name = aws_autoscaling_group.asg-1.id
   lb_target_group_arn   = var.target_group_arn
 }
-

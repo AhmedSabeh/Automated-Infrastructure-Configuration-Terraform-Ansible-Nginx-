@@ -1,9 +1,3 @@
-variable "project" {
-  description = "Project name prefix for tagging"
-  type        = string
-  default     = "main-project"
-}
-
 variable "region" {
   description = "AWS region"
   type        = string
